@@ -14,7 +14,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float jumpForce = 14f;
 
     private enum MovementState {idle, running, jumping, falling};
-    // Start is called before the first frame update
+
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -23,13 +23,13 @@ public class PlayerMovement : MonoBehaviour
         anim = GetComponent<Animator>();
     }
 
-    // Update is called once per frame
     private void Update()
     {
         dirX = Input.GetAxisRaw("Horizontal");
-        rb.velocity = new Vector2(dirX * moveSpeed, rb.velocity.y);
+        if (rb.bodyType == RigidbodyType2D.Dynamic)
+            rb.velocity = new Vector2(dirX * moveSpeed, rb.velocity.y);
 
-        if(Input.GetButtonDown("Jump") && IsGrounded())
+        if(Input.GetButtonDown("Jump") && IsGrounded() && rb.bodyType == RigidbodyType2D.Dynamic)
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
         }

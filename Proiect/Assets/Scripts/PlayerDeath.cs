@@ -7,10 +7,14 @@ public class PlayerDeath : MonoBehaviour
     private Rigidbody2D rb;
     private Animator anim;
 
+    [SerializeField]
+    private Vector2 spawnPoint = new Vector2(-15, 1);
+
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+        rb.transform.position = spawnPoint;
     }
 
     private void Update()
@@ -28,6 +32,15 @@ public class PlayerDeath : MonoBehaviour
         {
             Die();
         }
+
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Checkpoint"))
+        {
+            spawnPoint = collision.transform.position;
+        }
     }
 
     private void Die()
@@ -38,6 +51,12 @@ public class PlayerDeath : MonoBehaviour
 
     private void RestartLevel()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        rb.bodyType = RigidbodyType2D.Dynamic;
+        rb.transform.position = spawnPoint;
+    }
+
+    public void UpdateCheckpoint(Vector2 posCheckpoint)
+    {
+        spawnPoint = posCheckpoint;
     }
 }

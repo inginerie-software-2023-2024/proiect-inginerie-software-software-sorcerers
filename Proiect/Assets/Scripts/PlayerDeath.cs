@@ -6,6 +6,7 @@ public class PlayerDeath : MonoBehaviour
     [SerializeField] private float deathTreshold = -7.0f;
     private Rigidbody2D rb;
     private Animator anim;
+    private Animator animCheckpoint = null;
 
     [SerializeField]
     private Vector2 spawnPoint = new Vector2(-15, 1);
@@ -37,9 +38,15 @@ public class PlayerDeath : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if(animCheckpoint != null)
+        {
+            animCheckpoint.SetBool("isActive", false);
+        }
         if (collision.gameObject.CompareTag("Checkpoint"))
         {
             spawnPoint = collision.transform.position;
+            animCheckpoint = collision.GetComponent<Animator>();
+            animCheckpoint.SetBool("isActive", true);
         }
     }
 

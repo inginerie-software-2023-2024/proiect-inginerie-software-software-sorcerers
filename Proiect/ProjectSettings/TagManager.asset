@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Trap
   - Checkpoint
+  - DoubleJump
   layers:
   - Default
   - TransparentFX

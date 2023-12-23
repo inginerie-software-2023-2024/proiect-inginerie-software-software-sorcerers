@@ -7,13 +7,16 @@ public class PlayerMovement : MonoBehaviour
     private SpriteRenderer sprite;
     private Animator anim;
 
+    public bool unlockedDoubleJump;
+    private bool doubleJump;
+
     [SerializeField] private LayerMask jumpableGround;
 
     private float dirX = 0f;
     [SerializeField] private float moveSpeed = 7f;
     [SerializeField] private float jumpForce = 14f;
 
-    private enum MovementState {idle, running, jumping, falling};
+    private enum MovementState {idle, running, jumping, falling , doubleJumping};
 
     private void Start()
     {
@@ -26,12 +29,20 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         dirX = Input.GetAxisRaw("Horizontal");
-        if (rb.bodyType == RigidbodyType2D.Dynamic)
+        if(rb.bodyType == RigidbodyType2D.Dynamic)
             rb.velocity = new Vector2(dirX * moveSpeed, rb.velocity.y);
 
-        if(Input.GetButtonDown("Jump") && IsGrounded() && rb.bodyType == RigidbodyType2D.Dynamic)
+        if(Input.GetButtonDown("Jump") && (IsGrounded() || (doubleJump && unlockedDoubleJump)) && rb.bodyType == RigidbodyType2D.Dynamic)
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            
+            if(IsGrounded() == false)
+            {
+                doubleJump = false;
+            }else
+            {
+                doubleJump = true;
+            }
         }
 
         UpdateAnimationState();
@@ -59,6 +70,10 @@ public class PlayerMovement : MonoBehaviour
         if(rb.velocity.y > 0.1f)
         {
             state = MovementState.jumping;
+            if(doubleJump == false)
+            {
+                state = MovementState.doubleJumping;
+            }
         }
         else if(rb.velocity.y < -0.1f)
         {

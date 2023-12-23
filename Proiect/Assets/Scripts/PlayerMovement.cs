@@ -16,7 +16,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float moveSpeed = 7f;
     [SerializeField] private float jumpForce = 14f;
 
-    private enum MovementState { idle, running, jumping, falling };
+    private enum MovementState { idle, running, jumping, falling , doubleJumping};
 
     private void Start()
     {
@@ -70,6 +70,10 @@ public class PlayerMovement : MonoBehaviour
         if(rb.velocity.y > 0.1f)
         {
             state = MovementState.jumping;
+            if(doubleJump == false)
+            {
+                state = MovementState.doubleJumping;
+            }
         }
         else if(rb.velocity.y < -0.1f)
         {

@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class DoubleJumpUnlock : MonoBehaviour
@@ -14,7 +11,6 @@ public class DoubleJumpUnlock : MonoBehaviour
             if(playerMovement != null) 
             {
                 playerMovement.unlockedDoubleJump = true;
-                Debug.Log("test");
             }
             Destroy(collision.gameObject);
         }

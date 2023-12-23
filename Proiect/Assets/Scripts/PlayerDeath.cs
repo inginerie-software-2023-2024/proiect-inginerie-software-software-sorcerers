@@ -9,13 +9,13 @@ public class PlayerDeath : MonoBehaviour
     private Animator animCheckpoint = null;
 
     [SerializeField]
-    private Vector2 spawnPoint = new Vector2(-15, 1);
+    private Vector2 spawnPoint;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
-        rb.transform.position = spawnPoint;
+        spawnPoint = rb.transform.position;
     }
 
     private void Update()

@@ -51,3 +51,6 @@ TagManager:
   - name: Terrain
     uniqueID: 2667739401
     locked: 0
+  - name: Dash
+    uniqueID: 2295422221
+    locked: 0

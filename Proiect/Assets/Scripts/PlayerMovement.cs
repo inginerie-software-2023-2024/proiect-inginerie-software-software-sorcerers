@@ -49,8 +49,7 @@ public class PlayerMovement : MonoBehaviour
         if(Input.GetButtonDown("Jump") && (IsGrounded() || (doubleJump && unlockedDoubleJump)) && rb.bodyType == RigidbodyType2D.Dynamic)
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
-            
-            if(IsGrounded() == false)
+            if(IsGrounded() == false) 
             {
                 doubleJump = false;
             }else
@@ -63,6 +62,9 @@ public class PlayerMovement : MonoBehaviour
         {
             StartCoroutine(Dash());
         }
+
+        if (IsGrounded() == true)
+            doubleJump = true;
 
         UpdateAnimationState();
     }

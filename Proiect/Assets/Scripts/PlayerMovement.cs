@@ -19,7 +19,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float jumpForce = 14f;
     [SerializeField] private float dashSpeed = 20f;
     [SerializeField] private float dashCooldown = 1.0f;
-    [SerializeField] private bool unlockedDash;
+    [SerializeField] public bool unlockedDash;
     private bool allowed = true;
     private float dashTime = 0.2f;
     private bool dashing = false;

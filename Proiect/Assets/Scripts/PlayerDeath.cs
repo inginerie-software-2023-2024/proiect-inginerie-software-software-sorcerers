@@ -1,21 +1,15 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class PlayerDeath : MonoBehaviour
 {
     [SerializeField] private float deathTreshold = -7.0f;
     private Rigidbody2D rb;
     private Animator anim;
-    private Animator animCheckpoint = null;
-
-    [SerializeField]
-    private Vector2 spawnPoint;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
-        spawnPoint = rb.transform.position;
     }
 
     private void Update()
@@ -36,34 +30,20 @@ public class PlayerDeath : MonoBehaviour
 
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if(animCheckpoint != null)
-        {
-            animCheckpoint.SetBool("isActive", false);
-        }
-        if (collision.gameObject.CompareTag("Checkpoint"))
-        {
-            spawnPoint = collision.transform.position;
-            animCheckpoint = collision.GetComponent<Animator>();
-            animCheckpoint.SetBool("isActive", true);
-        }
-    }
-
     private void Die()
     {
         rb.bodyType = RigidbodyType2D.Static;
         anim.SetTrigger("death");
     }
 
+    // RestartLevel may appear as unused, but it is
+    // called at the end of the death animation, so
+    // do NOT delete it.
     private void RestartLevel()
     {
         rb.bodyType = RigidbodyType2D.Dynamic;
-        rb.transform.position = spawnPoint;
+        Checkpoint.MoveToSpawnpoint();
     }
 
-    public void UpdateCheckpoint(Vector2 posCheckpoint)
-    {
-        spawnPoint = posCheckpoint;
-    }
+
 }

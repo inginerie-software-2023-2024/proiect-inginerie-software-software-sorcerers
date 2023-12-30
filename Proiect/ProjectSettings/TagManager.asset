@@ -8,6 +8,7 @@ TagManager:
   - Checkpoint
   - DoubleJump
   - Dash
+  - Arrow
   - WallJump
   layers:
   - Default
@@ -17,7 +18,7 @@ TagManager:
   - Water
   - UI
   - Ground
-  - 
+  - Arrow
   - 
   - 
   - 

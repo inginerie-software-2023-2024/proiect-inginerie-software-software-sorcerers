@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -7,6 +8,7 @@ public class PlayerMovement : MonoBehaviour
     private SpriteRenderer sprite;
     private Animator anim;
 
+    private TrailRenderer trail;
     public bool unlockedDoubleJump;
     private bool doubleJump;
 
@@ -15,6 +17,14 @@ public class PlayerMovement : MonoBehaviour
     private float dirX = 0f;
     [SerializeField] private float moveSpeed = 7f;
     [SerializeField] private float jumpForce = 14f;
+    [SerializeField] private float dashSpeed = 20f;
+    [SerializeField] private float dashCooldown = 1.0f;
+    [SerializeField] public bool unlockedDash;
+    private bool allowed = true;
+    private float dashTime = 0.2f;
+    private bool dashing = false;
+
+
 
     private enum MovementState {idle, running, jumping, falling , doubleJumping};
 
@@ -24,10 +34,14 @@ public class PlayerMovement : MonoBehaviour
         coll = GetComponent<BoxCollider2D>();
         sprite = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
+        trail = GetComponent<TrailRenderer>();
     }
 
     private void Update()
     {
+        if (dashing)
+            return;
+
         dirX = Input.GetAxisRaw("Horizontal");
         if(rb.bodyType == RigidbodyType2D.Dynamic)
             rb.velocity = new Vector2(dirX * moveSpeed, rb.velocity.y);
@@ -43,6 +57,11 @@ public class PlayerMovement : MonoBehaviour
             {
                 doubleJump = true;
             }
+        }
+
+        if (Input.GetKeyDown(KeyCode.LeftShift) && allowed && unlockedDash)
+        {
+            StartCoroutine(Dash());
         }
 
         UpdateAnimationState();
@@ -87,4 +106,26 @@ public class PlayerMovement : MonoBehaviour
     {
         return Physics2D.BoxCast(coll.bounds.center, coll.bounds.size, 0f, Vector2.down, 0.1f, jumpableGround);
     }
+
+    private IEnumerator Dash()
+    {
+        float originalGravity = rb.gravityScale;
+        dashing = true;
+        allowed = false;
+        rb.gravityScale = 0f;
+        if (dirX != 0f)
+            rb.velocity = new Vector2(dashSpeed * dirX, 0f);
+        else if (sprite.flipX == false)
+            rb.velocity = new Vector2(dashSpeed, 0f);
+        else
+            rb.velocity = new Vector2(-dashSpeed, 0f);
+        trail.emitting = true;
+        yield return new WaitForSeconds(dashTime);
+        trail.emitting = false;
+        rb.gravityScale = originalGravity;
+        dashing = false;
+        yield return new WaitForSeconds(dashCooldown);
+        allowed = true;
+    }
+
 }

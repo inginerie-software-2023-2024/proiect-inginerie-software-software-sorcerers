@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -20,13 +21,23 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float dashSpeed = 20f;
     [SerializeField] private float dashCooldown = 1.0f;
     [SerializeField] public bool unlockedDash;
+    [SerializeField] public bool unlockedWallJump = false;
+
     private bool allowed = true;
     private float dashTime = 0.2f;
     private bool dashing = false;
 
+    [SerializeField] private bool isWallSliding = false;
+    private float wallSlidingSpeed = 2f;
 
 
-    private enum MovementState {idle, running, jumping, falling , doubleJumping};
+    [SerializeField] private Transform wallCheckLeft, wallCheckRight;
+    [SerializeField] private LayerMask wallLayer;
+
+    private enum JumpDirection {Left, Right, Ground};
+    private JumpDirection NextJumpDirection;
+
+    private enum MovementState {idle, running, jumping, falling , doubleJumping, wallJump};
 
     private void Start()
     {
@@ -46,7 +57,9 @@ public class PlayerMovement : MonoBehaviour
         if(rb.bodyType == RigidbodyType2D.Dynamic)
             rb.velocity = new Vector2(dirX * moveSpeed, rb.velocity.y);
 
-        if(Input.GetButtonDown("Jump") && (IsGrounded() || (doubleJump && unlockedDoubleJump)) && rb.bodyType == RigidbodyType2D.Dynamic)
+        if(Input.GetButtonDown("Jump") &&
+            (IsGrounded()|| CanWallJump() || (doubleJump && unlockedDoubleJump)) &&
+            rb.bodyType == RigidbodyType2D.Dynamic)
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
             if(IsGrounded() == false) 
@@ -64,8 +77,12 @@ public class PlayerMovement : MonoBehaviour
         }
 
         if (IsGrounded() == true)
+        {
             doubleJump = true;
+            NextJumpDirection = JumpDirection.Ground;
+        }
 
+        if (unlockedWallJump) WallSlide();
         UpdateAnimationState();
     }
 
@@ -101,12 +118,64 @@ public class PlayerMovement : MonoBehaviour
             state = MovementState.falling;
         }
 
+        if (isWallSliding)
+        {
+            state = MovementState.wallJump;
+        }
         anim.SetInteger("state", (int)state);
     }
 
     private bool IsGrounded()
     {
-        return Physics2D.BoxCast(coll.bounds.center, coll.bounds.size, 0f, Vector2.down, 0.1f, jumpableGround);
+        return Physics2D.BoxCast(coll.bounds.center, coll.bounds.size, 0f, Vector2.down, 0.05f, jumpableGround);
+    }
+
+    private bool IsWalled()
+    {
+        bool left, right;
+        left = Physics2D.OverlapCircle(wallCheckLeft.position, 0.075f, wallLayer);
+        right =Physics2D.OverlapCircle(wallCheckRight.position, 0.075f, wallLayer);
+
+        return left || right;
+    }
+
+    private void WallSlide()
+    {
+        if (IsWalled() && !IsGrounded())
+        {
+            isWallSliding = true;
+            rb.velocity = new Vector2(rb.velocity.x, Mathf.Clamp(rb.velocity.y, -wallSlidingSpeed, float.MaxValue));
+        }
+        else
+        {
+            isWallSliding = false;
+        }
+
+    }
+
+    private bool CanWallJump()
+    {
+        if (!IsWalled()||!unlockedWallJump)
+            return false;
+        bool left;
+        left = Physics2D.OverlapCircle(wallCheckLeft.position, 0.1f, wallLayer);
+        if (NextJumpDirection == JumpDirection.Ground)
+        {
+            if (left) NextJumpDirection = JumpDirection.Right;
+            else NextJumpDirection = JumpDirection.Left;
+            return true;
+        }
+        else if (NextJumpDirection == JumpDirection.Right && !left)
+        {
+            NextJumpDirection = JumpDirection.Left;
+            return true;
+        }
+        else if (NextJumpDirection == JumpDirection.Left && left)
+        {
+            NextJumpDirection = JumpDirection.Right;
+            return true;
+        }
+        return false;
     }
 
     private IEnumerator Dash()

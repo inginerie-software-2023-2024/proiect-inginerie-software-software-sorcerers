@@ -8,6 +8,7 @@ TagManager:
   - Checkpoint
   - DoubleJump
   - Dash
+  - WallJump
   layers:
   - Default
   - TransparentFX

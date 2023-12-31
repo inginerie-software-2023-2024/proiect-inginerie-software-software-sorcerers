@@ -5796,7 +5796,7 @@ PlatformEffector2D:
   m_UseColliderMask: 1
   m_ColliderMask:
     serializedVersion: 2
-    m_Bits: 119
+    m_Bits: 4294967295
   m_RotationalOffset: 0
   m_UseOneWay: 0
   m_UseOneWayGrouping: 0
@@ -42165,6 +42165,10 @@ PrefabInstance:
     - target: {fileID: 2738236336206167212, guid: 37ce951522f85584784d69dd29026b94, type: 3}
       propertyPath: m_Name
       value: Arrow Launcher
+      objectReference: {fileID: 0}
+    - target: {fileID: 2738236336206167212, guid: 37ce951522f85584784d69dd29026b94, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

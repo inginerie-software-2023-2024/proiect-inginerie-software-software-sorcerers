@@ -1,8 +1,5 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class ArrowLauncher : MonoBehaviour
 {
@@ -18,14 +15,13 @@ public class ArrowLauncher : MonoBehaviour
 
     private void Awake()
     {
-        StartCoroutine(SpawnArrow());
+        StartCoroutine(SpawnArrowLeft());
+        StartCoroutine(SpawnArrowRight());
+        StartCoroutine(SpawnArrowUp());
+        StartCoroutine(SpawnArrowDown());
     }
 
-    private void Update()
-    {
-
-    }
-    private IEnumerator SpawnArrow()
+    private IEnumerator SpawnArrowLeft()
     {
         while (true)
         {
@@ -34,28 +30,62 @@ public class ArrowLauncher : MonoBehaviour
                 var arrow = Instantiate(_arrow);
                 arrow.transform.position = transform.position;
                 arrow.GetComponent<Rigidbody2D>().velocity = new Vector2(-arrowSpeed, 0f);
-                Destroy(arrow, arrowLifeSpan);
+                yield return new WaitForSeconds(arrowLifeSpan);
+                if (arrow)
+                {
+                    Destroy(arrow);
+                }
             }
+            yield return new WaitForSeconds(launchSpeed);
+        }
+    }
+
+    private IEnumerator SpawnArrowRight()
+    {
+        while (true)
+        {
             if (toRight)
             {
                 var arrow = Instantiate(_arrow);
                 arrow.transform.position = transform.position;
                 arrow.GetComponent<Rigidbody2D>().velocity = new Vector2(arrowSpeed, 0f);
-                Destroy(arrow, arrowLifeSpan);
+                yield return new WaitForSeconds(arrowLifeSpan);
+                if (arrow)
+                    Destroy(arrow);
             }
+            yield return new WaitForSeconds(launchSpeed);
+        }
+    }
+
+    private IEnumerator SpawnArrowUp()
+    {
+        while (true)
+        {
             if (toTop)
             {
                 var arrow = Instantiate(_arrow);
                 arrow.transform.position = transform.position;
                 arrow.GetComponent<Rigidbody2D>().velocity = new Vector2(0, arrowSpeed);
-                Destroy(arrow, arrowLifeSpan);
+                yield return new WaitForSeconds(arrowLifeSpan);
+                if (arrow)
+                    Destroy(arrow);
             }
+            yield return new WaitForSeconds(launchSpeed);
+        }
+    }
+
+    private IEnumerator SpawnArrowDown()
+    {
+        while (true)
+        {
             if (toBottom)
             {
                 var arrow = Instantiate(_arrow);
                 arrow.transform.position = transform.position;
                 arrow.GetComponent<Rigidbody2D>().velocity = new Vector2(0f, -arrowSpeed);
-                Destroy(arrow, arrowLifeSpan);
+                yield return new WaitForSeconds(arrowLifeSpan);
+                if (arrow)
+                    Destroy(arrow);
             }
             yield return new WaitForSeconds(launchSpeed);
         }

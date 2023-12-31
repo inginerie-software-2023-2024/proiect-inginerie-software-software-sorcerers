@@ -172,7 +172,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _arrow: {fileID: 1340099770638520109, guid: 57031e8b4036e67499fcc5ef39dcafee, type: 3}
-  launchSpeed: 2
+  launchSpeed: 1
   arrowSpeed: 10
   arrowLifeSpan: 1
   toLeft: 1

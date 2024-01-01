@@ -28,11 +28,6 @@ public class PlayerDeath : MonoBehaviour
             Die();
         }
 
-        if (collision.gameObject.CompareTag("Arrow"))
-        {
-            Die();
-        }
-
     }
 
     private void Die()

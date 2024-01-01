@@ -157,6 +157,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (!IsWalled()||!unlockedWallJump)
             return false;
+        Debug.Log("Wall Jump");
         bool left;
         left = Physics2D.OverlapCircle(wallCheckLeft.position, 0.1f, wallLayer);
         if (NextJumpDirection == JumpDirection.Ground)

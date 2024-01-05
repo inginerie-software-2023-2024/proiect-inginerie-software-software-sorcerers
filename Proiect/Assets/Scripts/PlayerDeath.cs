@@ -5,11 +5,12 @@ public class PlayerDeath : MonoBehaviour
     [SerializeField] private float deathTreshold = -7.0f;
     private Rigidbody2D rb;
     private Animator anim;
-
+    private BoxCollider2D coll;
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+        coll = GetComponent<BoxCollider2D>();
     }
 
     private void Update()
@@ -32,6 +33,7 @@ public class PlayerDeath : MonoBehaviour
 
     private void Die()
     {
+        coll.enabled = false;
         rb.bodyType = RigidbodyType2D.Static;
         anim.SetTrigger("death");
     }
@@ -43,6 +45,7 @@ public class PlayerDeath : MonoBehaviour
     {
         rb.bodyType = RigidbodyType2D.Dynamic;
         Checkpoint.MoveToSpawnpoint();
+        coll.enabled = true;
     }
 
 

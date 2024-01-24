@@ -10,6 +10,7 @@ TagManager:
   - Dash
   - Arrow
   - WallJump
+  - LevelCompleted
   layers:
   - Default
   - TransparentFX

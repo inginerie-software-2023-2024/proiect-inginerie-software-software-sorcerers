@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class FinishScript : MonoBehaviour
@@ -5,6 +6,7 @@ public class FinishScript : MonoBehaviour
     private new AudioSource audio;
     private Animator anim;
     private bool finish = false;
+    [SerializeField] private GameObject LevelCompletedCanvas = null;
 
     private void Start()
     {
@@ -16,9 +18,15 @@ public class FinishScript : MonoBehaviour
         if (collision.gameObject.name == "Player" && finish == false)
         {
             audio.Play();
-            Debug.Log("Level Finished");
             anim.SetTrigger("finish");
             finish = true;
+            StartCoroutine(ActivateCanvasWithDelay());
         }
+    }
+    IEnumerator ActivateCanvasWithDelay()
+    {
+        yield return new WaitForSeconds(2f);
+
+        LevelCompletedCanvas.SetActive(true);
     }
 }

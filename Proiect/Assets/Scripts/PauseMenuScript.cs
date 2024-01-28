@@ -57,6 +57,7 @@ public class PauseMenuScript : MonoBehaviour
         var player = GameObject.Find("Player");
         player.GetComponent<PlayerMovement>().enabled = true;
         Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
         pauseMenu?.SetActive(false);
         Time.timeScale = 1f;
         paused = false;

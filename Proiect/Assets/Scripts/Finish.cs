@@ -7,11 +7,13 @@ public class FinishScript : MonoBehaviour
     private Animator anim;
     private bool finish = false;
     [SerializeField] private GameObject LevelCompletedCanvas = null;
+    private GameObject gm = null;
 
     private void Start()
     {
         audio = GetComponent<AudioSource>();    
         anim = GetComponent<Animator>();
+        gm = GameObject.Find("GameManager");
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -20,13 +22,15 @@ public class FinishScript : MonoBehaviour
             audio.Play();
             anim.SetTrigger("finish");
             finish = true;
+            gm.SetActive(false);
             StartCoroutine(ActivateCanvasWithDelay());
         }
     }
     IEnumerator ActivateCanvasWithDelay()
     {
         yield return new WaitForSeconds(2f);
-
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
         LevelCompletedCanvas.SetActive(true);
     }
 }
